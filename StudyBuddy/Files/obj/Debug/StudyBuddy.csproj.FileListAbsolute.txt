@@ -1,0 +1,10 @@
+C:\Users\Titas\Documents\Projects\StudyBuddy\StuddyBuddy\obj\Debug\StudyBuddy.csprojAssemblyReference.cache
+C:\Users\Titas\Documents\Projects\StudyBuddy\StuddyBuddy\obj\Debug\StudyBuddy.Login.resources
+C:\Users\Titas\Documents\Projects\StudyBuddy\StuddyBuddy\obj\Debug\StudyBuddy.Properties.Resources.resources
+C:\Users\Titas\Documents\Projects\StudyBuddy\StuddyBuddy\obj\Debug\StudyBuddy.csproj.GenerateResource.cache
+C:\Users\Titas\Documents\Projects\StudyBuddy\StuddyBuddy\obj\Debug\StudyBuddy.csproj.CoreCompileInputs.cache
+C:\Users\Titas\Documents\Projects\StudyBuddy\StuddyBuddy\bin\Debug\StudyBuddy.exe.config
+C:\Users\Titas\Documents\Projects\StudyBuddy\StuddyBuddy\bin\Debug\StudyBuddy.exe
+C:\Users\Titas\Documents\Projects\StudyBuddy\StuddyBuddy\bin\Debug\StudyBuddy.pdb
+C:\Users\Titas\Documents\Projects\StudyBuddy\StuddyBuddy\obj\Debug\StudyBuddy.exe
+C:\Users\Titas\Documents\Projects\StudyBuddy\StuddyBuddy\obj\Debug\StudyBuddy.pdb
