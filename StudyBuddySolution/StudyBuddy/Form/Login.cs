@@ -10,31 +10,31 @@ using System.Windows.Forms;
 
 namespace StudyBuddy
 {
-    public partial class Login : Form
+    public partial class LoginForm : Form
     {
-        public Login()
+        public LoginForm()
         {
             InitializeComponent();
         }
 
-        private void Label1_Click(object sender, EventArgs e)
+        private void Login_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void SubmitButton_Click(object sender, EventArgs e)
+        {
+            String ip = IpTextField.Text;
+            String name = NameTextField.Text;
+
+            /*this.Hide();
+            Chat chatForm = new Chat();
+            chatForm.Show();*/
         }
 
         private void ExitButton_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void SumbitButton_Click(object sender, EventArgs e)
-        {
-            String ip = IpTextField.Text;
-            String name = NameTextField.Text;
-
-            this.Hide();
-            Chat chatForm = new Chat();
-            chatForm.Show();
         }
     }
 }
