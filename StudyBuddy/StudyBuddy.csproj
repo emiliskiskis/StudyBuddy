@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CA2E5760-2637-4FB7-9F39-D5147574F8F9}</ProjectGuid>
+    <ProjectGuid>{7CDE4D59-1B3C-4DF8-A448-D7F8A491D4B3}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>StudyBuddy</RootNamespace>
     <AssemblyName>StudyBuddy</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -46,25 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form\Chat.cs">
+    <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\Chat.Designer.cs">
-      <DependentUpon>Chat.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form\Login.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\Login.Designer.cs">
-      <DependentUpon>Login.cs</DependentUpon>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form\Chat.resx">
-      <DependentUpon>Chat.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form\Login.resx">
-      <DependentUpon>Login.cs</DependentUpon>
+    <Compile Include="UserInformation.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
