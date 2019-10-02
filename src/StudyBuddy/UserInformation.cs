@@ -1,14 +1,12 @@
-﻿using System;
-
-/// <summary>
+﻿/// <summary>
 /// Summary description for Class1
 /// </summary>
 public class UserInformation
 {
-	public UserInformation()
-	{
+    public UserInformation()
+    {
         Username = "User";
-	}
+    }
 
     public UserInformation(string name)
     {

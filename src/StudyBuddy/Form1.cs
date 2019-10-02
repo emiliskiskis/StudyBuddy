@@ -1,27 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace StudyBuddy
 {
-
-
     public partial class Login : Form
     {
         private TcpClient client;
         public StreamReader STR;
         public StreamWriter STW;
-        public string recieve;
+        public string receive;
         public string TextToSend;
+        private readonly Regex portRegex = new Regex("^[0-9][1-9]{1,4}$");
 
         public Login()
         {
@@ -38,52 +34,65 @@ namespace StudyBuddy
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void ClientStartButton_Click(object sender, EventArgs e)
         {
-            TcpListener listener = new TcpListener(IPAddress.Any, int.Parse(UserPortField.Text));
-            listener.Start();
-            client = listener.AcceptTcpClient();
-            STR = new StreamReader(client.GetStream());
-            STW = new StreamWriter(client.GetStream());
-            STW.AutoFlush = true;
+            ValidateClientFields();
+            if (!HasErrors(new List<TextBox>() {
+                UserAddressField,
+                UserPortField
+            }))
+            {
+                TcpListener listener = new TcpListener(IPAddress.Any, int.Parse(UserPortField.Text));
+                ClientStartButton.Enabled = false;
+                ClientStartButton.Text = "Waiting for client...";
 
-            backgroundWorker1.RunWorkerAsync();
-            backgroundWorker2.WorkerSupportsCancellation = true;
+                new Thread(new ThreadStart(() =>
+                {
+                    listener.Start();
+                    client = listener.AcceptTcpClient();
+                    STR = new StreamReader(client.GetStream());
+                    STW = new StreamWriter(client.GetStream())
+                    {
+                        AutoFlush = true
+                    };
+
+                    backgroundWorker1.RunWorkerAsync();
+                    backgroundWorker2.WorkerSupportsCancellation = true;
+                })).Start();
+            }
         }
 
         private void ServerLoginButton_Click(object sender, EventArgs e)
         {
-            client = new TcpClient();
-            IPEndPoint IpEnd = new IPEndPoint(IPAddress.Parse(ServerAddressField.Text), int.Parse(ServerPortField.Text));
-
-            try
+            ValidateServerFields();
+            if (!HasErrors(new List<TextBox>()
             {
-                client.Connect(IpEnd);
-
-                if (client.Connected)
+                ServerAddressField,
+                ServerPortField
+            }))
+            {
+                client = new TcpClient();
+                IPEndPoint IpEnd = new IPEndPoint(IPAddress.Parse(ServerAddressField.Text), int.Parse(ServerPortField.Text));
+                try
                 {
-                    ChatLogField.AppendText("Connected to server!" + "\r\n");
+                    client.Connect(IpEnd);
 
-                    STW = new StreamWriter(client.GetStream());
-                    STR = new StreamReader(client.GetStream());
-                    STW.AutoFlush = true;
-                    backgroundWorker1.RunWorkerAsync();
-                    backgroundWorker2.WorkerSupportsCancellation = true;
+                    if (client.Connected)
+                    {
+                        ChatLogField.AppendText("Connected to server!\r\n");
+
+                        STW = new StreamWriter(client.GetStream())
+                        {
+                            AutoFlush = true
+                        };
+                        STR = new StreamReader(client.GetStream());
+                        backgroundWorker1.RunWorkerAsync();
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message.ToString());
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
+                }
             }
         }
 
@@ -94,12 +103,12 @@ namespace StudyBuddy
                 {
                     try
                     {
-                        recieve = STR.ReadLine();
-                        this.ChatLogField.Invoke(new MethodInvoker(delegate ()
-                        {
-                            ChatLogField.AppendText("You:" + recieve + "\r\n");
-                        }));
-                        recieve = "";
+                        receive = STR.ReadLine();
+                        this.ChatLogField.Invoke(new MethodInvoker(delegate
+                       {
+                           ChatLogField.AppendText("Them: " + receive + "\r\n");
+                       }));
+                        receive = "";
                     }
                     catch (Exception ex)
                     {
@@ -116,7 +125,7 @@ namespace StudyBuddy
                 STW.WriteLine(TextToSend);
                 this.ChatLogField.Invoke(new MethodInvoker(delegate ()
                 {
-                    ChatLogField.AppendText("Me:" + TextToSend + "\r\n");
+                    ChatLogField.AppendText("Me: " + TextToSend + "\r\n");
                 }));
             }
             else
@@ -128,12 +137,94 @@ namespace StudyBuddy
 
         private void SendMessageButton_Click(object sender, EventArgs e)
         {
-            if (MessageField.Text != "")
+            SendMessage(MessageField);
+        }
+
+        private void MessageField_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                SendMessage(MessageField);
+            }
+        }
+
+        private void UserAddressField_Validating(object sender, CancelEventArgs e)
+        {
+            ValidateAddressField(UserAddressField);
+        }
+
+        private void UserPortField_Validating(object sender, CancelEventArgs e)
+        {
+            ValidatePortField(UserPortField);
+        }
+
+        private void ServerAddressField_Validating(object sender, CancelEventArgs e)
+        {
+            ValidateAddressField(ServerAddressField);
+        }
+
+        private void ServerPortField_Validating(object sender, CancelEventArgs e)
+        {
+            ValidatePortField(ServerPortField);
+        }
+
+        private bool HasErrors(List<TextBox> textBoxes)
+        {
+            foreach (TextBox textBox in textBoxes)
+            {
+                if (errorProvider.GetError(textBox).Length > 0) return true;
+            }
+            return false;
+        }
+
+        private void SendMessage(TextBox textBox)
+        {
+            if (!string.IsNullOrWhiteSpace(textBox.Text))
             {
                 TextToSend = MessageField.Text;
                 backgroundWorker2.RunWorkerAsync();
             }
-            MessageField.Text = "";
+            textBox.Text = "";
+        }
+
+        private void ValidateClientFields()
+        {
+            ValidateFields(UserAddressField, UserPortField);
+        }
+
+        private void ValidateServerFields()
+        {
+            ValidateFields(ServerAddressField, ServerPortField);
+        }
+
+        private void ValidateFields(TextBox addressField, TextBox portField)
+        {
+            ValidateAddressField(addressField);
+            ValidatePortField(portField);
+        }
+
+        private void ValidateAddressField(TextBox addressField)
+        {
+            if (!IPAddress.TryParse(addressField.Text, out _))
+            {
+                errorProvider.SetError(addressField, "Invalid IP");
+            }
+            else
+            {
+                errorProvider.SetError(addressField, "");
+            }
+        }
+
+        private void ValidatePortField(TextBox portField)
+        {
+            if (!portRegex.IsMatch(portField.Text))
+            {
+                errorProvider.SetError(portField, "Invalid port");
+            }
+            else
+            {
+                errorProvider.SetError(portField, "");
+            }
         }
     }
 }

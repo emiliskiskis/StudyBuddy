@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
+            this.components = new System.ComponentModel.Container();
             this.ChatLogField = new System.Windows.Forms.TextBox();
             this.MessageField = new System.Windows.Forms.TextBox();
             this.SendMessageButton = new System.Windows.Forms.Button();
@@ -46,8 +46,10 @@
             this.ServerPortField = new System.Windows.Forms.TextBox();
             this.ServerAddressField = new System.Windows.Forms.TextBox();
             this.ServerAddressLabel = new System.Windows.Forms.Label();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.ClientSetup.SuspendLayout();
             this.ServerSetup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // ChatLogField
@@ -64,6 +66,7 @@
             this.MessageField.Name = "MessageField";
             this.MessageField.Size = new System.Drawing.Size(426, 20);
             this.MessageField.TabIndex = 7;
+            this.MessageField.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MessageField_KeyDown);
             // 
             // SendMessageButton
             // 
@@ -81,6 +84,7 @@
             // 
             // backgroundWorker2
             // 
+            this.backgroundWorker2.WorkerSupportsCancellation = true;
             this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker2_DoWork);
             // 
             // ClientSetup
@@ -112,6 +116,7 @@
             this.UserPortField.Name = "UserPortField";
             this.UserPortField.Size = new System.Drawing.Size(100, 20);
             this.UserPortField.TabIndex = 3;
+            this.UserPortField.Validating += new System.ComponentModel.CancelEventHandler(this.UserPortField_Validating);
             // 
             // UserAddressLabel
             // 
@@ -128,6 +133,7 @@
             this.UserAddressField.Name = "UserAddressField";
             this.UserAddressField.Size = new System.Drawing.Size(262, 20);
             this.UserAddressField.TabIndex = 1;
+            this.UserAddressField.Validating += new System.ComponentModel.CancelEventHandler(this.UserAddressField_Validating);
             // 
             // ClientStartButton
             // 
@@ -178,6 +184,7 @@
             this.ServerPortField.Name = "ServerPortField";
             this.ServerPortField.Size = new System.Drawing.Size(100, 20);
             this.ServerPortField.TabIndex = 8;
+            this.ServerPortField.Validating += new System.ComponentModel.CancelEventHandler(this.ServerPortField_Validating);
             // 
             // ServerAddressField
             // 
@@ -185,6 +192,7 @@
             this.ServerAddressField.Name = "ServerAddressField";
             this.ServerAddressField.Size = new System.Drawing.Size(262, 20);
             this.ServerAddressField.TabIndex = 6;
+            this.ServerAddressField.Validating += new System.ComponentModel.CancelEventHandler(this.ServerAddressField_Validating);
             // 
             // ServerAddressLabel
             // 
@@ -194,6 +202,11 @@
             this.ServerAddressLabel.Size = new System.Drawing.Size(82, 13);
             this.ServerAddressLabel.TabIndex = 7;
             this.ServerAddressLabel.Text = "Server Address:";
+            // 
+            // errorProvider
+            // 
+            this.errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.errorProvider.ContainerControl = this;
             // 
             // Login
             // 
@@ -205,14 +218,13 @@
             this.Controls.Add(this.SendMessageButton);
             this.Controls.Add(this.MessageField);
             this.Controls.Add(this.ChatLogField);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Login";
             this.Text = "Study Buddy";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.ClientSetup.ResumeLayout(false);
             this.ClientSetup.PerformLayout();
             this.ServerSetup.ResumeLayout(false);
             this.ServerSetup.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,6 +248,7 @@
         private System.Windows.Forms.TextBox ServerPortField;
         private System.Windows.Forms.TextBox ServerAddressField;
         private System.Windows.Forms.Label ServerAddressLabel;
+        private System.Windows.Forms.ErrorProvider errorProvider;
     }
 }
 
