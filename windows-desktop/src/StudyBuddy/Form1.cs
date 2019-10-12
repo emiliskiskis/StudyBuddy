@@ -98,22 +98,20 @@ namespace StudyBuddy
 
         private void BackgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            while (client.Connected)
             {
-                while (client.Connected)
+                try
                 {
-                    try
-                    {
-                        receive = STR.ReadLine();
-                        this.ChatLogField.Invoke(new MethodInvoker(delegate
-                       {
-                           ChatLogField.AppendText("Them: " + receive + "\r\n");
-                       }));
-                        receive = "";
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message.ToString());
-                    }
+                    receive = STR.ReadLine();
+                    this.ChatLogField.Invoke(new MethodInvoker(delegate
+                   {
+                       ChatLogField.AppendText("Them: " + receive + "\r\n");
+                   }));
+                    receive = "";
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());
                 }
             }
         }
@@ -225,6 +223,10 @@ namespace StudyBuddy
             {
                 errorProvider.SetError(portField, "");
             }
+        }
+
+        private void ServerPortField_TextChanged(object sender, EventArgs e)
+        {
         }
     }
 }

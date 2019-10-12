@@ -184,6 +184,7 @@
             this.ServerPortField.Name = "ServerPortField";
             this.ServerPortField.Size = new System.Drawing.Size(100, 20);
             this.ServerPortField.TabIndex = 8;
+            this.ServerPortField.TextChanged += new System.EventHandler(this.ServerPortField_TextChanged);
             this.ServerPortField.Validating += new System.ComponentModel.CancelEventHandler(this.ServerPortField_Validating);
             // 
             // ServerAddressField
