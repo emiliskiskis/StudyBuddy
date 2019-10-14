@@ -15,16 +15,56 @@ namespace StudyBuddy
         public SignIn()
         {
             InitializeComponent();
-            maskedTextBox1.Text = "";
-            maskedTextBox1.MaxLength = 30;
-            maskedTextBox2.Text = "";
             maskedTextBox2.PasswordChar = '*';
-            maskedTextBox2.MaxLength = 30;
         }
 
         private void SignIn_FormClosed(object sender, FormClosedEventArgs e)
         {
             FormManager.Close();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            String username = maskedTextBox1.Text;
+            String password = maskedTextBox2.Text;
+            bool err = false;
+
+            label4.Text = "";
+
+            if (String.IsNullOrEmpty(username))
+            {
+                errorProvider1.SetError(maskedTextBox1, "Please enter your username");
+                err = true;
+            }
+            if (String.IsNullOrEmpty(password))
+            {
+                errorProvider2.SetError(maskedTextBox2, "Please enter your password");
+                err = true;
+            }
+
+            
+
+            if (err == false)
+            {
+                errorProvider1.SetError(maskedTextBox1, null);
+                errorProvider2.SetError(maskedTextBox2, null);
+
+                if(UtilityFunctions.checkLogin(username, password) == false)
+                {
+                    FormManager.Open(this, new UserList());
+                }
+                else
+                {
+                    label4.Text = "Incorrect username or password";
+                    maskedTextBox1.Clear();
+                    maskedTextBox2.Clear();
+                    maskedTextBox1.Focus();
+                }
+                
+            }
+            
+        }
+
     }
 }

@@ -15,22 +15,19 @@ namespace StudyBuddy
         public MainMenu()
         {
             InitializeComponent();
+            FormManager.Add(this);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SignIn sign = new SignIn();
-            FormManager.Add(sign);
-            sign.Show();
+            FormManager.Add(new SignIn());
 
             this.Hide();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Register reg = new Register();
-            FormManager.Add(reg);
-            reg.Show();
+            FormManager.Add(new Register());
 
             this.Hide();
         }
