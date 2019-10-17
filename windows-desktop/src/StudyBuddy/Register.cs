@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BCrypt.Net;
 
 namespace StudyBuddy
 {
@@ -22,10 +23,10 @@ namespace StudyBuddy
 
         private void Register_FormClosed(object sender, FormClosedEventArgs e)
         {
-            FormManager.Close();
+            FormManager.CloseAllForms();
         }
 
-        public void button1_Click(object sender, EventArgs e)
+        public async void button1_Click(object sender, EventArgs e)
         {
             String username = maskedTextBox1.Text;
             String password1 = maskedTextBox2.Text;
@@ -98,21 +99,24 @@ namespace StudyBuddy
 
             if (err == false)
             {
-                User user = new User(username, password1, firstname, lastname, email);
+                string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+                string hashedpassword = BCrypt.Net.BCrypt.HashPassword(password1, salt);
+                User user = new User(username, hashedpassword, salt, firstname, lastname, email);
                 if (Validator.CheckRegister(user))
                 {
-                    NetworkManager.CreateUserAsync(user).ContinueWith((task) =>
-                        {
-                            if (task.Result)
-                            {
-                                //FormManager.Open(this, FormManager.FormType.userlist);
-                            }
-                            else
-                            {
-                                errorProvider1.SetError(maskedTextBox1, "Username already exists");
-                                maskedTextBox1.Focus();
-                            }
-                        });
+                    bool result = await NetworkManager.CreateUserAsync(user);
+
+                    if (result)
+                    {
+                        FormManager.BackToMain(this);
+                        //FormManager.Open(this, FormManager.FormType.userlist);
+                    }
+                    else
+                    {
+                        errorProvider1.SetError(maskedTextBox1, "Username already exists");
+                        maskedTextBox1.Focus();
+                    }
+
                 }
             }
         }

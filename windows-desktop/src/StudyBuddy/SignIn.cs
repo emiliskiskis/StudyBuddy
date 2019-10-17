@@ -20,7 +20,7 @@ namespace StudyBuddy
 
         private void SignIn_FormClosed(object sender, FormClosedEventArgs e)
         {
-            FormManager.Close();
+            FormManager.CloseAllForms();
         }
 
         private void button1_Click(object sender, EventArgs e)

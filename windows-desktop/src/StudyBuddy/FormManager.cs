@@ -18,8 +18,8 @@ namespace StudyBuddy
             register,
             userlist
         }
-        
-        public static void Add(FormType ftype)                                   //adds new form of given type
+        //adds new form of given type
+        public static void Add(FormType ftype)                                   
         {
             switch (ftype)
             {
@@ -55,21 +55,22 @@ namespace StudyBuddy
             }
 
         }
-
-        private static void Remove(Form o)                                    //closes given form
+        //closes given form
+        public static void Remove(Form o)                                    
         {
             list.Remove(o);
-            o.Close();
+            o.Dispose();
         }
-
-        public static void Open(Form f1, FormType ftype)                       //opens new form of specified type while closing f1
+        //opens new form of specified type while closing f1
+        public static void Open(Form f1, FormType ftype)                      
         {
             Remove(f1);
             Add(ftype);
         }
         
-        private static void ShowMain()
+        public static void BackToMain(Form f1)
         {
+            Remove(f1);
             Form f = (Form)list[0];
             f.Show();
         }
@@ -79,11 +80,12 @@ namespace StudyBuddy
             list.Add(f1);
         }
 
-        public static void Close()                                      //disposes of all forms
+        //disposes of all forms
+        public static void CloseAllForms()                                      
         {
-            for(int x = list.Count; x > 0; x--)
+            for(int x = 0; x < list.Count; )
             {
-                Remove((Form)list[x-1]);
+                Remove((Form)list[x]);
             }
         }
 

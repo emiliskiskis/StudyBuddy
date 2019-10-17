@@ -19,7 +19,7 @@ namespace StudyBuddy
 
         private void UserList_FormClosed(object sender, FormClosedEventArgs e)
         {
-            FormManager.Close();
+            FormManager.CloseAllForms();
         }
     }
 }
