@@ -50,7 +50,7 @@ namespace StudyBuddy
                 errorProvider1.SetError(maskedTextBox1, null);
                 errorProvider2.SetError(maskedTextBox2, null);
 
-                if(Validator.CheckLogin(username, password) == true)
+                if(Validator.CheckLoginAsync(username, password).Result)
                 {
                     FormManager.Open(this, FormManager.FormType.userlist);
                 }

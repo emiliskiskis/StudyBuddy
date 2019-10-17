@@ -9,11 +9,18 @@ namespace StudyBuddy
 {
     class Validator
     {
-        public static bool CheckLogin(String username, String password)
+        public static async Task<bool> CheckLoginAsync(String username, String password)
         {
-            //String salt, hash;
-            //TODO http request
-            return true;
+            string salt = await NetworkManager.GetSaltAsync(username);
+            string hashedpassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
+
+            bool result = await NetworkManager.CheckHashAsync(username, hashedpassword);
+
+            if (result)
+            {
+                return true;
+            }
+            else return false;
         }
 
         public static bool CheckRegister(User user)
