@@ -10,30 +10,73 @@ namespace StudyBuddy
 {
     class FormManager
     {
-        private static ArrayList list = new ArrayList();
-
-        public static int Add(Form o)                                   //adds given form
+        private static readonly List<Form> list = new List<Form>();
+        public enum FormType
         {
-            o.Show();
-            return list.Add(o);
+            main,
+            signin,
+            register,
+            userlist
+        }
+        
+        public static void Add(FormType ftype)                                   //adds new form of given type
+        {
+            switch (ftype)
+            {
+                case FormType.main:
+                    {
+                        MainMenu form = new MainMenu();
+                        list.Add(form);
+                        form.Show();
+                        break;
+                    }
+                case FormType.register:
+                    {
+                        Register form = new Register();
+                        list.Add(form);
+                        form.Show();
+                        break;
+                    }
+                case FormType.signin:
+                    {
+                        SignIn form = new SignIn();
+                        list.Add(form);
+                        form.Show();
+                        break;
+                    }
+                case FormType.userlist:
+                    {
+                        UserList form = new UserList();
+                        list.Add(form);
+                        form.Show();
+                        break;
+                    }
+                default: break;
+            }
+
         }
 
-        public static void Remove(Form o)                               //disposes of given form
+        private static void Remove(Form o)                                    //closes given form
         {
             list.Remove(o);
-            o.Dispose();
+            o.Close();
         }
 
-        public static void Open(Form f1, Form f2)                       //opens form f2 while closing f1
+        public static void Open(Form f1, FormType ftype)                       //opens new form of specified type while closing f1
         {
             Remove(f1);
-            Add(f2);
+            Add(ftype);
         }
-
-        public static void ShowMain()
+        
+        private static void ShowMain()
         {
             Form f = (Form)list[0];
             f.Show();
+        }
+
+        public static void AddMain(Form f1)
+        {
+            list.Add(f1);
         }
 
         public static void Close()                                      //disposes of all forms

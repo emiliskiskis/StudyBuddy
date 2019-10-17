@@ -25,7 +25,7 @@ namespace StudyBuddy
             FormManager.Close();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void button1_Click(object sender, EventArgs e)
         {
             String username = maskedTextBox1.Text;
             String password1 = maskedTextBox2.Text;
@@ -61,7 +61,6 @@ namespace StudyBuddy
                 {
                     errorProvider3.SetError(maskedTextBox3, "Passwords do not match");
                     err = true;
-                    maskedTextBox3.Clear();
                     maskedTextBox3.Focus();
                 }
                 else errorProvider3.SetError(maskedTextBox3, null);
@@ -74,11 +73,10 @@ namespace StudyBuddy
             }
             else
             {
-                if (UtilityFunctions.checkEmail(email) == true)
+                if (Validator.CheckEmail(email) == true)
                 {
                     errorProvider4.SetError(maskedTextBox4, "Invalid email format");
                     err = true;
-                    maskedTextBox4.Clear();
                     maskedTextBox4.Focus();
                 }
                 else errorProvider4.SetError(maskedTextBox4, null);
@@ -99,17 +97,22 @@ namespace StudyBuddy
             else errorProvider6.SetError(maskedTextBox6, null);
 
             if (err == false)
-            { 
-                String[] userdata = { username, password1, password2, email, firstname, lastname };
-                if (UtilityFunctions.checkRegister(userdata) == false)
+            {
+                User user = new User(username, password1, firstname, lastname, email);
+                if (Validator.CheckRegister(user))
                 {
-                        FormManager.Open(this, new UserList());
-                }
-                else
-                {
-                    errorProvider1.SetError(maskedTextBox1, "Username already exists");
-                    maskedTextBox1.Clear();
-                    maskedTextBox1.Focus();
+                    NetworkManager.CreateUserAsync(user).ContinueWith((task) =>
+                        {
+                            if (task.Result)
+                            {
+                                //FormManager.Open(this, FormManager.FormType.userlist);
+                            }
+                            else
+                            {
+                                errorProvider1.SetError(maskedTextBox1, "Username already exists");
+                                maskedTextBox1.Focus();
+                            }
+                        });
                 }
             }
         }

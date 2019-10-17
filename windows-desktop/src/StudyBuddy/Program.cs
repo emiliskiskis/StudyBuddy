@@ -15,6 +15,7 @@ namespace StudyBuddy
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new UserRating());
             //Application.Run(new Login());
+            NetworkManager.Setup();
             Application.Run(new MainMenu());
         }
     }

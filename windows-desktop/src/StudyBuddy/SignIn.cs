@@ -50,15 +50,13 @@ namespace StudyBuddy
                 errorProvider1.SetError(maskedTextBox1, null);
                 errorProvider2.SetError(maskedTextBox2, null);
 
-                if(UtilityFunctions.checkLogin(username, password) == false)
+                if(Validator.CheckLogin(username, password) == true)
                 {
-                    FormManager.Open(this, new UserList());
+                    FormManager.Open(this, FormManager.FormType.userlist);
                 }
                 else
                 {
                     label4.Text = "Incorrect username or password";
-                    maskedTextBox1.Clear();
-                    maskedTextBox2.Clear();
                     maskedTextBox1.Focus();
                 }
                 
