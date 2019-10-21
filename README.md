@@ -11,6 +11,7 @@
 
 ### Backend API endpoints
   * `/api/users`
+  
       User entity model:
       ```      
       {
@@ -33,9 +34,9 @@
   
   TODO:
   * `api/users`
-    Salt entity model:
     * `GET /{username}/salt` - get user salt
   * `api/login`
+  
     Login entity model:
     ```
     {
