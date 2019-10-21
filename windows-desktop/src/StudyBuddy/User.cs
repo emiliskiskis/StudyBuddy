@@ -11,8 +11,8 @@ namespace StudyBuddy
         public string username { get; set; }
         public string password { get; set; }
         public string salt { get; set; }
-        public string first_name { get; set; }
-        public string last_name { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
         public string email { get; set; }
 
         public User(string user, string pass, string first, string last, string email)
@@ -20,8 +20,8 @@ namespace StudyBuddy
             username = user;
             password = pass;
             salt = "";
-            first_name = first;
-            last_name = last;
+            firstName = first;
+            lastName = last;
             this.email = email;
         }
 
@@ -30,8 +30,8 @@ namespace StudyBuddy
             username = user;
             password = pass;
             this.salt = salt;
-            first_name = first;
-            last_name = last;
+            firstName = first;
+            lastName = last;
             this.email = email;
         }
     }

@@ -16,21 +16,24 @@ namespace StudyBuddy
         public static async Task<bool> CreateUserAsync(User user)
         {
             string json = JsonConvert.SerializeObject(user);
-            //Console.WriteLine(json);
+            Console.WriteLine(json);
 
             HttpResponseMessage response = await client.PostAsync(
-                "api/user",
+                "api/users/",
                 new StringContent(json, Encoding.UTF8, "application/json"));
 
-            //Console.WriteLine(new StringContent(json, Encoding.UTF8, "application/json").Headers);
+
+            Console.WriteLine(new StringContent(json, Encoding.UTF8, "application/json").Headers);
+            Console.WriteLine(response.RequestMessage.RequestUri.ToString());
 
             try
             {
                 response.EnsureSuccessStatusCode();
                 return true;
             }
-            catch(Exception)
+            catch(HttpRequestException e)
             {
+                Console.WriteLine(e + " - CreateUserAsync");
                 return false;
             }
 
@@ -39,17 +42,16 @@ namespace StudyBuddy
         public static async Task<string> GetSaltAsync(string username)
         {
             HttpResponseMessage response = await client.GetAsync(
-                "api/user/"+username+"/salt");
-
-            //Console.WriteLine(new StringContent(json, Encoding.UTF8, "application/json").Headers);
+                "api/users/"+username+"/salt");
 
             try
             {
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadAsStringAsync();
             }
-            catch (Exception)
+            catch (HttpRequestException e)
             {
+                Console.WriteLine(e + " - GetSaltAsync");
                 return response.StatusCode.ToString();
             }
 
@@ -69,20 +71,20 @@ namespace StudyBuddy
                 response.EnsureSuccessStatusCode();
                 return true;
             }
-            catch (Exception)
+            catch (HttpRequestException e)
             {
+                Console.WriteLine(e);
                 return false;
             }
         }
 
         public static void Setup()
         {
-            client.BaseAddress = new Uri("http://buddiesofstudy.tk");
+            client.BaseAddress = new Uri("http://www.buddiesofstudy.tk:80/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
         }
-
     }
 }

@@ -48,6 +48,11 @@ namespace StudyBuddy
                 errorProvider2.SetError(maskedTextBox2, "Please enter your password");
                 err = true;
             }
+            else if (!Validator.CheckPassword(password1))
+            {
+                errorProvider2.SetError(maskedTextBox2, "The password must contain at least 8 characters, one uppercase and one lowercase letter and at least one digit");
+                err = true;
+            }
             else errorProvider2.SetError(maskedTextBox2, null);
 
             if (String.IsNullOrEmpty(password2))
@@ -98,24 +103,31 @@ namespace StudyBuddy
 
             if (err == false)
             {
-                string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
-                string hashedpassword = BCrypt.Net.BCrypt.HashPassword(password1, salt);
-                User user = new User(username, hashedpassword, salt, firstname, lastname, email);
-                if (Validator.CheckRegister(user))
+                try
                 {
-                    bool result = await NetworkManager.CreateUserAsync(user);
-
-                    if (result)
+                    string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+                    string hashedpassword = BCrypt.Net.BCrypt.HashPassword(password1, salt);
+                    User user = new User(username, hashedpassword, salt, firstname, lastname, email);
+                    if (Validator.CheckRegister(user))
                     {
-                        FormManager.BackToMain(this);
-                        //FormManager.Open(this, FormManager.FormType.userlist);
-                    }
-                    else
-                    {
-                        errorProvider1.SetError(maskedTextBox1, "Username already exists");
-                        maskedTextBox1.Focus();
-                    }
+                        bool result = await NetworkManager.CreateUserAsync(user);
 
+                        if (result)
+                        {
+                            FormManager.BackToMain(this);
+                            FormManager.Open(this, FormManager.FormType.userlist);
+                        }
+                        else
+                        {
+                            errorProvider1.SetError(maskedTextBox1, "Username already exists");
+                            maskedTextBox1.Focus();
+                        }
+
+                    }
+                }
+                catch(Exception E)
+                {
+                    Console.WriteLine(E);
                 }
             }
         }
