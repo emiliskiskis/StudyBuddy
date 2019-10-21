@@ -26,15 +26,12 @@
       ```
     * `POST /` - add new user  
     * `GET /{username}` - get user (password and salt will not be provided)
+    * `GET /{username}/salt` - get user salt
     * `PUT /{username}` - update user
     * `PATCH /{username}` - patch user info partially
     * `DELETE /{username}` - delete user
     
     On password change both password and salt fields have to be updated.
-  
-  TODO:
-  * `api/users`
-    * `GET /{username}/salt` - get user salt
   * `api/login`
   
     Login entity model:
