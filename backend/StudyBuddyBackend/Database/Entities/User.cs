@@ -1,26 +1,36 @@
-﻿using System;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
-using StudyBuddyBackend.Database.Attributes;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudyBuddyBackend.Database.Entities
 {
-    [Serializable]
     public class User
     {
-        [Id] public string Username { get; set; }
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(255)]
+        [Key]
+        public string Username { get; set; }
 
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(255)]
         public string Password { get; set; }
+
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(255)]
         public string Salt { get; set; }
 
-        [JsonProperty("first_name")]
-        [JsonPropertyName("first_name")]
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(255)]
         public string FirstName { get; set; }
 
-        [JsonProperty("last_name")]
-        [JsonPropertyName("last_name")]
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(255)]
         public string LastName { get; set; }
 
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(255)]
         public string Email { get; set; }
+
+        public ICollection<UserChat> Chats { get; set; }
     }
 }
