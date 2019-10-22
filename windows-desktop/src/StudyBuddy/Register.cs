@@ -108,26 +108,22 @@ namespace StudyBuddy
                     string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
                     string hashedpassword = BCrypt.Net.BCrypt.HashPassword(password1, salt);
                     User user = new User(username, hashedpassword, salt, firstname, lastname, email);
-                    if (Validator.CheckRegister(user))
+                    bool result = await NetworkManager.CreateUserAsync(user);
+
+                    if (result)
                     {
-                        bool result = await NetworkManager.CreateUserAsync(user);
-
-                        if (result)
-                        {
-                            FormManager.BackToMain(this);
-                            FormManager.Open(this, FormManager.FormType.userlist);
-                        }
-                        else
-                        {
-                            errorProvider1.SetError(maskedTextBox1, "Username already exists");
-                            maskedTextBox1.Focus();
-                        }
-
+                        FormManager.BackToMain(this);
+                        FormManager.Open(this, FormManager.FormType.userlist);
+                    }
+                    else
+                    {
+                        errorProvider1.SetError(maskedTextBox1, "Username already exists");
+                        maskedTextBox1.Focus();
                     }
                 }
-                catch(Exception E)
+                catch(ArgumentException exc)
                 {
-                    Console.WriteLine(E);
+                    Console.WriteLine(exc);
                 }
             }
         }

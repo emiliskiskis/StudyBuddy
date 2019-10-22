@@ -18,22 +18,19 @@ namespace StudyBuddy
             string json = JsonConvert.SerializeObject(user);
             Console.WriteLine(json);
 
-            HttpResponseMessage response = await client.PostAsync(
+            try
+            {
+                HttpResponseMessage response = await client.PostAsync(
                 "api/users/",
                 new StringContent(json, Encoding.UTF8, "application/json"));
 
-
-            Console.WriteLine(new StringContent(json, Encoding.UTF8, "application/json").Headers);
-            Console.WriteLine(response.RequestMessage.RequestUri.ToString());
-
-            try
-            {
+            
                 response.EnsureSuccessStatusCode();
                 return true;
             }
             catch(HttpRequestException e)
             {
-                Console.WriteLine(e + " - CreateUserAsync");
+                Console.WriteLine(e);
                 return false;
             }
 
@@ -41,40 +38,50 @@ namespace StudyBuddy
 
         public static async Task<string> GetSaltAsync(string username)
         {
-            HttpResponseMessage response = await client.GetAsync(
-                "api/users/"+username+"/salt");
+            HttpResponseMessage response = client.GetAsync(
+                "api/users/" + username + "/salt").GetAwaiter().GetResult();
 
-            try
-            {
-                response.EnsureSuccessStatusCode();
-                return await response.Content.ReadAsStringAsync();
-            }
-            catch (HttpRequestException e)
-            {
-                Console.WriteLine(e + " - GetSaltAsync");
-                return response.StatusCode.ToString();
-            }
+            response.EnsureSuccessStatusCode();
 
+            return await response.Content.ReadAsStringAsync();
         }
 
-        public static async Task<bool> CheckHashAsync(string username, string password)
+        public static bool CheckHash(string username, string password)
         {
-            var credentials = new { username, password };
-            string json = JsonConvert.SerializeObject(credentials);
-
-            HttpResponseMessage response = await client.PostAsync(
-                "api/login",
-                new StringContent(json, Encoding.UTF8, "application/json"));
-
             try
             {
+                var credentials = new { username, password };
+                string json = JsonConvert.SerializeObject(credentials);
+                HttpResponseMessage response = client.PostAsync(
+                    "api/login",
+                    new StringContent(json, Encoding.UTF8, "application/json")).GetAwaiter().GetResult();
+
+
                 response.EnsureSuccessStatusCode();
                 return true;
             }
-            catch (HttpRequestException e)
+            catch(Exception exc)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(exc);
                 return false;
+            }
+        }
+
+        public static async Task<User> GetUserInfoAsync(string username)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(
+                    "api/users/" + username);
+
+                response.EnsureSuccessStatusCode();
+
+                return JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync());
+            }
+            catch(Exception exc)
+            {
+                Console.WriteLine(exc);
+                return null;
             }
         }
 

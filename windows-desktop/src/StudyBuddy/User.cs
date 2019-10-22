@@ -14,6 +14,7 @@ namespace StudyBuddy
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string email { get; set; }
+        public List<int> chats { get; set; }
 
         public User(string user, string pass, string first, string last, string email)
         {
@@ -33,6 +34,12 @@ namespace StudyBuddy
             firstName = first;
             lastName = last;
             this.email = email;
+            
         }
+    }
+
+    class Salt
+    {
+        public string salt { get; set; }
     }
 }

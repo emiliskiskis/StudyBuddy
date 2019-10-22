@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+
 
 namespace StudyBuddy
 {
@@ -12,16 +14,27 @@ namespace StudyBuddy
     {
         public static async Task<bool> CheckLoginAsync(String username, String password)
         {
-            string salt = await NetworkManager.GetSaltAsync(username);
-            string hashedpassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
-
-            bool result = await NetworkManager.CheckHashAsync(username, hashedpassword);
-
-            if (result)
+            try
             {
-                return true;
+                Salt saltObject = new Salt();
+                String saltString;
+                saltString = NetworkManager.GetSaltAsync(username).GetAwaiter().GetResult();
+                saltObject = JsonConvert.DeserializeObject<Salt>(saltString);
+                string hashedpassword = BCrypt.Net.BCrypt.HashPassword(password, saltObject.salt);
+                bool result = NetworkManager.CheckHash(username, hashedpassword);
+
+                if (result)
+                {
+                    return true;
+                }
+                else return false;
             }
-            else return false;
+            catch(Exception exc)
+            {
+                Console.WriteLine(exc);
+            }
+
+            return false;
         }
 
         public static bool CheckRegister(User user)

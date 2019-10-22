@@ -60,6 +60,7 @@
             this.Name = "UserList";
             this.Text = "User List";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.UserList_FormClosed);
+            this.Load += new System.EventHandler(this.UserList_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

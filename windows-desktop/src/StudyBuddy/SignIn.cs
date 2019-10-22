@@ -50,16 +50,23 @@ namespace StudyBuddy
                 errorProvider1.SetError(maskedTextBox1, null);
                 errorProvider2.SetError(maskedTextBox2, null);
 
-                if(Validator.CheckLoginAsync(username, password).Result)
+                Console.WriteLine("I'm before the loginCheck");
+                try
                 {
-                    FormManager.Open(this, FormManager.FormType.userlist);
+                    if (Validator.CheckLoginAsync(username, password).GetAwaiter().GetResult())
+                    {
+                        FormManager.Open(this, FormManager.FormType.userlist);
+                        Console.WriteLine("Login Successful!");
+                    }
+                    else
+                    {
+                        label4.Text = "Incorrect username or password";
+                        maskedTextBox1.Focus();
+                    }
                 }
-                else
-                {
-                    label4.Text = "Incorrect username or password";
-                    maskedTextBox1.Focus();
+                catch (AggregateException exc) {
+                    Console.WriteLine(exc);
                 }
-                
             }
             
         }

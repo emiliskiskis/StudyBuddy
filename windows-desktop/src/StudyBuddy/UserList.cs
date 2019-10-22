@@ -21,5 +21,10 @@ namespace StudyBuddy
         {
             FormManager.CloseAllForms();
         }
+
+        private void UserList_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
