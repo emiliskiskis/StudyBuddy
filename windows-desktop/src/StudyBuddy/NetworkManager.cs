@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -11,87 +9,64 @@ namespace StudyBuddy
 {
     public class NetworkManager
     {
-        static HttpClient client = new HttpClient();
+        private readonly static HttpClient client = new HttpClient();
+
+        public static void Setup()
+        {
+            client.BaseAddress = new Uri("http://www.buddiesofstudy.tk/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
 
         public static async Task<bool> CreateUserAsync(User user)
         {
-            string json = JsonConvert.SerializeObject(user);
-            Console.WriteLine(json);
-
             try
             {
-                HttpResponseMessage response = await client.PostAsync(
-                "api/users/",
-                new StringContent(json, Encoding.UTF8, "application/json"));
+                string json = JsonConvert.SerializeObject(user);
+                Console.WriteLine(json);
 
-            
-                response.EnsureSuccessStatusCode();
-                return true;
+                var response = await client.PostAsync("api/users", new StringContent(json, Encoding.UTF8, "application/json"));
+                return response.IsSuccessStatusCode;
             }
-            catch(HttpRequestException e)
+            catch (JsonSerializationException)
             {
-                Console.WriteLine(e);
                 return false;
             }
-
         }
 
         public static async Task<string> GetSaltAsync(string username)
         {
-            HttpResponseMessage response = client.GetAsync(
-                "api/users/" + username + "/salt").GetAwaiter().GetResult();
-
-            response.EnsureSuccessStatusCode();
-
+            var response = await client.GetAsync($"api/users/{username}/salt");
             return await response.Content.ReadAsStringAsync();
         }
 
-        public static bool CheckHash(string username, string password)
+        public static async Task<bool> CheckHash(string username, string password)
         {
+            var credentials = new { username, password };
             try
             {
-                var credentials = new { username, password };
                 string json = JsonConvert.SerializeObject(credentials);
-                HttpResponseMessage response = client.PostAsync(
-                    "api/login",
-                    new StringContent(json, Encoding.UTF8, "application/json")).GetAwaiter().GetResult();
+                var response = await client.PostAsync("api/login", new StringContent(json, Encoding.UTF8, "application/json"));
 
-
-                response.EnsureSuccessStatusCode();
-                return true;
+                return response.IsSuccessStatusCode;
             }
-            catch(Exception exc)
+            catch (JsonSerializationException)
             {
-                Console.WriteLine(exc);
                 return false;
             }
         }
 
         public static async Task<User> GetUserInfoAsync(string username)
         {
+            var response = await client.GetAsync($"api/users/{username}");
             try
             {
-                HttpResponseMessage response = await client.GetAsync(
-                    "api/users/" + username);
-
-                response.EnsureSuccessStatusCode();
-
                 return JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync());
             }
-            catch(Exception exc)
+            catch (JsonSerializationException)
             {
-                Console.WriteLine(exc);
                 return null;
             }
-        }
-
-        public static void Setup()
-        {
-            client.BaseAddress = new Uri("http://www.buddiesofstudy.tk:80/");
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-
         }
     }
 }
