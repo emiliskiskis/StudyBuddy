@@ -24,12 +24,13 @@
         "chats": List of chat ids user is participating in (read-only)
       }
       ```
-    * `POST /` - add new user  
+    * `POST /` - add new user  (returns added user)
+    * `GET /` - get all users (returns their usernames and names)
     * `GET /{username}` - get user (password and salt will not be provided)
     * `GET /{username}/salt` - get user salt
-    * `PUT /{username}` - update user
-    * `PATCH /{username}` - patch user info partially
-    * `DELETE /{username}` - delete user
+    * `PUT /{username}` - update user (returns updated user without chats)
+    * `PATCH /{username}` - patch user info partially (returns updated user without chats)
+    * `DELETE /{username}` - delete user (returns deleted user without chats)
     
     On password change both password and salt fields have to be updated.
   * `api/login`
@@ -42,3 +43,20 @@
     }
     ```
     * `POST /` - request to login to server (200 OK if logged in)
+  * `api/chat`
+  
+    Group request model:
+    ```
+    {
+      "username": Username of user who's connecting,
+      "connectTo": Username of user to connect to
+    }
+    ```
+    
+    Group response model:
+    ```
+    {
+      "groupName": Name of group, a GUID string
+    }
+    ```
+    * `POST /` - create group and get its name; if group between exactly two users already exists, get its name
