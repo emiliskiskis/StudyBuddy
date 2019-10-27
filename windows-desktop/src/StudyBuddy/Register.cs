@@ -112,6 +112,7 @@ namespace StudyBuddy
 
                     if (result)
                     {
+                        NetworkManager.SetUserInformation(user.username);
                         FormManager.Open(this, FormManager.FormType.chatSession);
                     }
                     else

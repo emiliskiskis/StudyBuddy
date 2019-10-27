@@ -54,9 +54,7 @@ namespace StudyBuddy
                 {
                     if (Validator.CheckLoginAsync(username, password).GetAwaiter().GetResult())
                     {
-                        Console.WriteLine("Login Sucessful");
                         NetworkManager.SetUserInformation(username);
-                        Console.WriteLine("Information set!");
                         FormManager.Open(this, FormManager.FormType.chatSession);
                     }
                     else

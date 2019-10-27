@@ -172,6 +172,7 @@
     <Compile Include="Chat.Designer.cs">
       <DependentUpon>Chat.cs</DependentUpon>
     </Compile>
+    <Compile Include="Class1.cs" />
     <Compile Include="FormManager.cs" />
     <Compile Include="MainMenu.cs">
       <SubType>Form</SubType>

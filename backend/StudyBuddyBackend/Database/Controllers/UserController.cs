@@ -1,81 +1,157 @@
-﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using MySql.Data.MySqlClient;
+using StudyBuddyBackend.Database.Contexts;
 using StudyBuddyBackend.Database.Entities;
-using StudyBuddyBackend.Database.Repositories;
+using StudyBuddyBackend.Database.Models.Response;
+using StudyBuddyBackend.Database.Validators;
 
 namespace StudyBuddyBackend.Database.Controllers
 {
-    [Route("api/user")]
     [ApiController]
-    public sealed class UserController : ControllerBase
+    [Route("api/users")]
+    public class UserController : ControllerBase
     {
-        private readonly ILogger<UserController> _logger;
-        private readonly UserRepository _userRepository;
+        private readonly DatabaseContext _databaseContext;
+        private readonly ILogger _logger;
+        private readonly UserValidator _userValidator;
 
-        public UserController(ILogger<UserController> logger, UserRepository userManager)
+        public UserController(DatabaseContext databaseContext, ILogger<UserController> logger)
         {
+            _databaseContext = databaseContext;
             _logger = logger;
-            _userRepository = userManager;
+            _userValidator = new UserValidator();
         }
 
-        // POST: api/user
         [HttpPost]
-        public IActionResult Create([FromBody] User user)
+        public ActionResult<User> CreateUser([FromBody] User user)
         {
-            try
-            {
-                _userRepository.Create(user);
-                return Ok(_userRepository.Read(user.Username).Value);
-            }
-            catch (MySqlException e)
-            {
-                _logger.LogError(e.ToString());
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.ToString());
-                return StatusCode(500, e.ToString());
-            }
+            _databaseContext.Users.Add(user);
+            _databaseContext.SaveChanges();
+            return Ok(_databaseContext.Users.Find(user.Username));
         }
 
-        // GET: api/user/username
         [HttpGet("{username}")]
-        public IActionResult Read(string username)
+        public ActionResult<object> ReadUser(string username)
         {
-            var optional = _userRepository.Read(username);
-            if (optional.HasValue) return Ok(optional.Value);
-            return NotFound();
+            var user = _databaseContext.Users.Find(username);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return new PasswordlessUser(user);
         }
 
-        // PUT: api/user/username
+        [HttpGet("{username}/salt")]
+        public ActionResult<SaltBody> ReadUserSalt(string username)
+        {
+            var user = _databaseContext.Users.Find(username);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            return new SaltBody(user.Salt);
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<object>> ReadAllUsers()
+        {
+            return _databaseContext.Users.Select(user => new PasswordlessUser(user)).ToList();
+        }
+
         [HttpPut("{username}")]
-        public IActionResult Update(string username, [FromBody] User newUser)
+        public ActionResult<object> UpdateUser(string username, [FromBody] User user)
         {
-            return StatusCode(500, "Unimplemented");
-        }
+            if (username != user.Username)
+            {
+                return BadRequest();
+            }
 
-        // DELETE: api/user/username
-        [HttpDelete("{username}")]
-        public IActionResult Delete(string username)
-        {
+            _databaseContext.Users.Update(user);
             try
             {
-                _userRepository.Delete(username);
-                return Ok();
+                _databaseContext.SaveChanges();
             }
-            catch (MySqlException e)
+            catch (DbUpdateConcurrencyException)
             {
-                _logger.LogError(e.ToString());
-                return BadRequest(e.ToString());
+                if (!UserExists(username))
+                {
+                    return NotFound();
+                }
+
+                throw;
             }
-            catch (Exception e)
+
+            var updatedUser = _databaseContext.Users.Find(username);
+            return new PasswordlessUser(updatedUser);
+        }
+
+        [HttpPatch("{username}")]
+        public ActionResult<object> PatchUser(string username, [FromBody] JsonPatchDocument<User> patch)
+        {
+            var user = _databaseContext.Users.Find(username);
+            if (user == null)
             {
-                _logger.LogError(e.ToString());
-                return StatusCode(500, e.ToString());
+                return NotFound();
             }
+
+            patch.ApplyTo(user);
+            var validationResult = _userValidator.Validate(user);
+
+            if (!validationResult.IsValid)
+            {
+                var groupedErrors = new Dictionary<string, ICollection<string>>();
+
+                foreach (var error in validationResult.Errors)
+                {
+                    var field = error.PropertyName;
+                    if (!groupedErrors.ContainsKey(field))
+                    {
+                        groupedErrors.Add(field, new List<string>());
+                    }
+
+                    groupedErrors[field].Add(error.ErrorMessage);
+                }
+
+                var errorArrays = new Dictionary<string, string[]>();
+
+                foreach (var (fieldName, errorList) in groupedErrors)
+                {
+                    errorArrays.Add(fieldName, errorList.ToArray());
+                }
+
+                return BadRequest(new ValidationProblemDetails(errorArrays));
+            }
+
+            _databaseContext.Users.Update(user);
+            _databaseContext.SaveChanges();
+
+            return _databaseContext.Users.Find(username);
+        }
+
+        [HttpDelete("{username}")]
+        public ActionResult<object> DeleteUser(string username)
+        {
+            var user = _databaseContext.Users.Find(username);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            _databaseContext.Users.Remove(user);
+            _databaseContext.SaveChanges();
+
+            return new PasswordlessUser(user);
+        }
+
+        private bool UserExists(string username)
+        {
+            return _databaseContext.Users.Any(u => u.Username == username);
         }
     }
 }
