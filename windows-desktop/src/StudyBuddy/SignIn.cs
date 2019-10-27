@@ -50,13 +50,14 @@ namespace StudyBuddy
                 errorProvider1.SetError(maskedTextBox1, null);
                 errorProvider2.SetError(maskedTextBox2, null);
 
-                Console.WriteLine("I'm before the loginCheck");
                 try
                 {
                     if (Validator.CheckLoginAsync(username, password).GetAwaiter().GetResult())
                     {
-                        FormManager.Open(this, FormManager.FormType.userlist);
-                        Console.WriteLine("Login Successful!");
+                        Console.WriteLine("Login Sucessful");
+                        NetworkManager.SetUserInformation(username);
+                        Console.WriteLine("Information set!");
+                        FormManager.Open(this, FormManager.FormType.chatSession);
                     }
                     else
                     {

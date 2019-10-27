@@ -16,7 +16,8 @@ namespace StudyBuddy
             main,
             signin,
             register,
-            userlist
+            userlist,
+            chatSession
         }
         //adds new form of given type
         public static void Add(FormType ftype)                                   
@@ -51,7 +52,15 @@ namespace StudyBuddy
                         form.Show();
                         break;
                     }
-                default: break;
+                case FormType.chatSession:
+                    {
+                        Chat form = new Chat();
+                        list.Add(form);
+                        form.Show();
+                        break;
+                    }
+                default: 
+                    break;
             }
 
         }

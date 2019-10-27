@@ -6,12 +6,16 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR.Client;
+using System.Windows.Threading;
 
 namespace StudyBuddy
 {
     public class NetworkManager
     {
         static HttpClient client = new HttpClient();
+        static HubConnection connection;
+        static User userInformation;
 
         public static async Task<bool> CreateUserAsync(User user)
         {
@@ -26,6 +30,7 @@ namespace StudyBuddy
 
             
                 response.EnsureSuccessStatusCode();
+                SetUserInformation(user.username);
                 return true;
             }
             catch(HttpRequestException e)
@@ -54,13 +59,14 @@ namespace StudyBuddy
                 string json = JsonConvert.SerializeObject(credentials);
                 HttpResponseMessage response = client.PostAsync(
                     "api/login",
-                    new StringContent(json, Encoding.UTF8, "application/json")).GetAwaiter().GetResult();
+                    new StringContent(json, Encoding.UTF8, "application/json")
+                ).GetAwaiter().GetResult();
 
 
                 response.EnsureSuccessStatusCode();
                 return true;
             }
-            catch(Exception exc)
+            catch(HttpRequestException exc)
             {
                 Console.WriteLine(exc);
                 return false;
@@ -71,20 +77,68 @@ namespace StudyBuddy
         {
             try
             {
-                HttpResponseMessage response = await client.GetAsync(
-                    "api/users/" + username);
+                HttpResponseMessage response = client.GetAsync(
+                    "api/users/" + username).GetAwaiter().GetResult();
 
                 response.EnsureSuccessStatusCode();
-
-                return JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync());
+                var UserHold = JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync());
+                return UserHold;
             }
-            catch(Exception exc)
+            catch(HttpRequestException exc)
             {
                 Console.WriteLine(exc);
                 return null;
             }
         }
 
+        public static void StartHub()
+        {
+            connection = new HubConnectionBuilder().
+                WithUrl("http://78.56.77.83:8080/chat")
+                .WithAutomaticReconnect()
+                .Build();
+
+            connection.Closed += async (error) =>
+            {
+                await Task.Delay(new Random().Next(0, 5) * 1000);
+                await connection.StartAsync();
+            };
+        }
+        
+        public static void ConnectToGroup(ChatGroupSession session)
+        {
+            try
+            {
+                connection.InvokeAsync("Connect", session.user.username, session.groupId);
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc);
+            }
+        }
+        
+        public static void SendMessage(User user, string groupName, string message) 
+        {
+            try
+            {
+                connection.InvokeAsync<string>("SendMessage", user.username, groupName, message);
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc);
+            }
+        }
+        
+        public static void SetUserInformation(string username)
+        {
+            userInformation = GetUserInfoAsync(username).Result;
+            Console.WriteLine("info set?");
+        }
+
+        public static User GetUserInformation()
+        {
+            return userInformation;
+        }
         public static void Setup()
         {
             client.BaseAddress = new Uri("http://www.buddiesofstudy.tk:80/");

@@ -36,6 +36,22 @@ namespace StudyBuddy
             this.email = email;
             
         }
+
+        public User()
+        {
+        }
+    }
+
+    public class ChatGroupSession
+    {
+        public User user { get; set; }
+        public string groupId { get; set; }
+
+        public ChatGroupSession( User userInfo, string group)
+        {
+            user = userInfo;
+            groupId = group;
+        }
     }
 
     class Salt

@@ -112,8 +112,7 @@ namespace StudyBuddy
 
                     if (result)
                     {
-                        FormManager.BackToMain(this);
-                        FormManager.Open(this, FormManager.FormType.userlist);
+                        FormManager.Open(this, FormManager.FormType.chatSession);
                     }
                     else
                     {
