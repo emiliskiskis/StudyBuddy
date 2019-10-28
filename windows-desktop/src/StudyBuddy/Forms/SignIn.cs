@@ -19,7 +19,7 @@ namespace StudyBuddy.Forms
             _validator = validator;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             String username = maskedTextBox1.Text;
             String password = maskedTextBox2.Text;
@@ -45,8 +45,9 @@ namespace StudyBuddy.Forms
 
                 try
                 {
-                    if (_validator.CheckLoginAsync(username, password).GetAwaiter().GetResult())
+                    if (await _validator.CheckLoginAsync(username, password))
                     {
+                        await _networkManager.SetUserInformationAsync(username);
                         _formManager.Open(this, FormManager.FormType.chatSession);
                     }
                     else

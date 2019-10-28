@@ -94,18 +94,13 @@ namespace StudyBuddy.Managers
             _userInformation = await GetUserInfoAsync(username);
         }
 
-        public void StartHub()
+        public async Task StartHubAsync()
         {
             _connection = new HubConnectionBuilder()
                 .WithUrl(_client.BaseAddress + "chat")
                 .WithAutomaticReconnect()
                 .Build();
-
-            _connection.Closed += async (error) =>
-            {
-                await Task.Delay(new Random().Next(0, 5) * 1000);
-                await _connection.StartAsync();
-            };
+            await _connection.StartAsync();
         }
 
         protected virtual void Dispose(bool dispose)

@@ -24,10 +24,10 @@ namespace StudyBuddy.Forms
             MessageBox.Clear();
         }
 
-        private void Chat_Load(object sender, EventArgs e)
+        private async void Chat_Load(object sender, EventArgs e)
         {
             Console.WriteLine("Loading chat...");
-            _networkManager.StartHub();
+            await _networkManager.StartHubAsync();
             Console.WriteLine("Hub started");
             session = new ChatGroupSession(_networkManager.GetUserInfo(), "TestGroup");
             Console.WriteLine("session set");
