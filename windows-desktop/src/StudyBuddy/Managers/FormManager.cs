@@ -55,16 +55,16 @@ namespace StudyBuddy.Managers
                     }
                 case FormType.userlist:
                     {
-                        UserList form = new UserList(this);
+                        UserList form = new UserList(this, _networkManager);
                         list.Add(form);
                         form.Show();
                         break;
                     }
                 case FormType.chatSession:
                     {
-                        Chat form = new Chat(_networkManager);
-                        list.Add(form);
-                        form.Show();
+                        //Chat form = new Chat(_networkManager);
+                        //list.Add(form);
+                        //form.Show();
                         break;
                     }
                 default:
@@ -98,6 +98,14 @@ namespace StudyBuddy.Managers
         {
             Remove(f1);
             Add(ftype);
+        }
+
+        public void OpenChat(Form f1, string groupName)
+        {
+            Remove(f1);
+            Chat form = new Chat(_networkManager, groupName);
+            list.Add(form);
+            form.Show();
         }
 
         //closes given form

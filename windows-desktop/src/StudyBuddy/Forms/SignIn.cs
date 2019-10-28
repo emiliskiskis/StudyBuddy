@@ -48,7 +48,8 @@ namespace StudyBuddy.Forms
                     if (await _validator.CheckLoginAsync(username, password))
                     {
                         await _networkManager.SetUserInformationAsync(username);
-                        _formManager.Open(this, FormManager.FormType.chatSession);
+                        //_formManager.Open(this, FormManager.FormType.chatSession);
+                        _formManager.Open(this, FormManager.FormType.userlist);
                     }
                     else
                     {

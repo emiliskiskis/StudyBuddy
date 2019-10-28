@@ -11,12 +11,14 @@ namespace StudyBuddy.Forms
         private readonly NetworkManager _networkManager;
         private List<ChatHistory> _messages;
         private ChatGroupSession session;
+        private string groupName;
 
-        public Chat(NetworkManager networkManager)
+        public Chat(NetworkManager networkManager, string groupName)
         {
             InitializeComponent();
             _networkManager = networkManager;
             _messages = new List<ChatHistory>();
+            this.groupName = groupName;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -28,7 +30,7 @@ namespace StudyBuddy.Forms
         private async void Chat_Load(object sender, EventArgs e)
         {
             await _networkManager.StartHubAsync();
-            session = new ChatGroupSession(_networkManager.GetUserInfo(), "1527e6cd-091d-4133-85a8-1f2983ee6b50");
+            session = new ChatGroupSession(_networkManager.GetUserInfo(), groupName);
             _networkManager.ConnectToGroup(session);
             _messages = await _networkManager.GetChatHubHistoryAsync(session.groupId);
             PrintChatHistory(session.groupId);

@@ -139,5 +139,43 @@ namespace StudyBuddy.Managers
                 return null;
             }
         }
+
+        public async Task<List<PublicUser>> GetAllUsersAsync()
+        {
+            try
+            {
+                var response = await _client.GetAsync("api/users");
+                return JsonConvert.DeserializeObject<List<PublicUser>>(await response.Content.ReadAsStringAsync());
+            }
+            catch (JsonSerializationException)
+            {
+                return null;
+            }
+            catch (HttpRequestException)
+            {
+                return null;
+            }
+        }
+
+        public async Task<String> GetGroupNameAsync(string currentUsername, string targetUsername)
+        {
+            var jsonContent = new { username = currentUsername, connectTo = targetUsername };
+            try
+            {
+                string json = JsonConvert.SerializeObject(jsonContent);
+                using var request = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await _client.PostAsync("api/chat", request);
+                ChatGroup group = JsonConvert.DeserializeObject<ChatGroup>(await response.Content.ReadAsStringAsync());
+                return group.groupName;
+            }
+            catch (JsonSerializationException)
+            {
+                return null;
+            }
+            catch (HttpRequestException)
+            {
+                return null;
+            }
+        }
     }
 }

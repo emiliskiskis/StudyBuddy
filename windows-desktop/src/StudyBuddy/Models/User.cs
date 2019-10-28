@@ -44,13 +44,32 @@ namespace StudyBuddy.Models
         {
         }
 
-        public List<int> chats { get; set; }
+        public List<string> chats { get; set; }
         public string email { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string password { get; set; }
         public string salt { get; set; }
         public string username { get; set; }
+    }
+
+    public class PublicUser
+    {
+        public PublicUser(string username, string firstname, string lastname)
+        {
+            this.username = username;
+            firstName = firstname;
+            lastName = lastname;
+        }
+
+        public string username { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+    }
+
+    public class ChatGroup
+    {
+        public string groupName { get; set; }
     }
 
     internal class Salt
