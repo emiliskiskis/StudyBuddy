@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 
 namespace StudyBuddy.Models
 {
+    public class ChatGroupSession
+    {
+        public ChatGroupSession(User userInfo, string group)
+        {
+            user = userInfo;
+            groupId = group;
+        }
+
+        public string groupId { get; set; }
+        public User user { get; set; }
+    }
+
     public class User
     {
-        public string username { get; set; }
-        public string password { get; set; }
-        public string salt { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string email { get; set; }
-        public List<int> chats { get; set; }
-
         public User(string user, string pass, string first, string last, string email)
         {
             username = user;
@@ -34,27 +38,22 @@ namespace StudyBuddy.Models
             firstName = first;
             lastName = last;
             this.email = email;
-            
         }
 
         public User()
         {
         }
+
+        public List<int> chats { get; set; }
+        public string email { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public string password { get; set; }
+        public string salt { get; set; }
+        public string username { get; set; }
     }
 
-    public class ChatGroupSession
-    {
-        public User user { get; set; }
-        public string groupId { get; set; }
-
-        public ChatGroupSession( User userInfo, string group)
-        {
-            user = userInfo;
-            groupId = group;
-        }
-    }
-
-    class Salt
+    internal class Salt
     {
         public string salt { get; set; }
     }

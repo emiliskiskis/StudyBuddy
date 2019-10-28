@@ -198,6 +198,7 @@
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="Managers\NetworkManager.cs" />
+    <Compile Include="Models\ChatHistory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\Rating.xaml.cs">

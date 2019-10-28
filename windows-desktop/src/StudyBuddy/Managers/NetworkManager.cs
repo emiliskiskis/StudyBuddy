@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using StudyBuddy.Models;
+using System.Collections.Generic;
 
 namespace StudyBuddy.Managers
 {
@@ -19,7 +20,7 @@ namespace StudyBuddy.Managers
         {
             _client = new HttpClient
             {
-                BaseAddress = new Uri("http://www.buddiesofstudy.tk/")
+                BaseAddress = new Uri("http://78.56.77.83:8080")
             };
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(
@@ -73,6 +74,12 @@ namespace StudyBuddy.Managers
             GC.SuppressFinalize(this);
         }
 
+        public async Task<List<ChatHistory>> GetChatHubHistoryAsync(string groupName)
+        {
+            var response = await _client.GetAsync($"/api/chat/{groupName}");
+            return JsonConvert.DeserializeObject<List<ChatHistory>>(await response.Content.ReadAsStringAsync());
+        }
+
         public async Task<string> GetSaltAsync(string username)
         {
             var response = await _client.GetAsync($"api/users/{username}/salt");
@@ -82,6 +89,11 @@ namespace StudyBuddy.Managers
         public User GetUserInfo()
         {
             return _userInformation;
+        }
+
+        public void ReceiveMessage(Action<string, string, string> callback)
+        {
+            _connection.On<string, string, string>("ReceiveMessage", callback);
         }
 
         public async void SendMessage(User user, string groupName, string message)
@@ -97,7 +109,7 @@ namespace StudyBuddy.Managers
         public async Task StartHubAsync()
         {
             _connection = new HubConnectionBuilder()
-                .WithUrl(_client.BaseAddress + "chat")
+                .WithUrl("http://78.56.77.83:8080" + "/chat")
                 .WithAutomaticReconnect()
                 .Build();
             await _connection.StartAsync();
