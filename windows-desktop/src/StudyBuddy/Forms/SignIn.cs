@@ -1,31 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using StudyBuddy.Managers;
 
-namespace StudyBuddy
+namespace StudyBuddy.Forms
 {
     public partial class SignIn : Form
     {
-        public SignIn()
+        private readonly FormManager _formManager;
+        private readonly NetworkManager _networkManager;
+        private readonly Validator _validator;
+
+        public SignIn(FormManager formManager, NetworkManager networkManager, Validator validator)
         {
             InitializeComponent();
             maskedTextBox2.PasswordChar = '*';
-        }
-
-        private void SignIn_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            FormManager.CloseAllForms();
+            _networkManager = networkManager;
+            _formManager = formManager;
+            _validator = validator;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-
             String username = maskedTextBox1.Text;
             String password = maskedTextBox2.Text;
             bool err = false;
@@ -43,8 +38,6 @@ namespace StudyBuddy
                 err = true;
             }
 
-            
-
             if (err == false)
             {
                 errorProvider1.SetError(maskedTextBox1, null);
@@ -52,10 +45,9 @@ namespace StudyBuddy
 
                 try
                 {
-                    if (Validator.CheckLoginAsync(username, password).GetAwaiter().GetResult())
+                    if (_validator.CheckLoginAsync(username, password).GetAwaiter().GetResult())
                     {
-                        NetworkManager.SetUserInformation(username);
-                        FormManager.Open(this, FormManager.FormType.chatSession);
+                        _formManager.Open(this, FormManager.FormType.chatSession);
                     }
                     else
                     {
@@ -63,12 +55,16 @@ namespace StudyBuddy
                         maskedTextBox1.Focus();
                     }
                 }
-                catch (AggregateException exc) {
+                catch (AggregateException exc)
+                {
                     Console.WriteLine(exc);
                 }
             }
-            
         }
 
+        private void SignIn_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _formManager.CloseAllForms();
+        }
     }
 }

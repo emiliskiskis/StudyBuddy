@@ -1,28 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using StudyBuddy.Managers;
+using StudyBuddy.Models;
 
-namespace StudyBuddy
+namespace StudyBuddy.Forms
 {
     public partial class Register : Form
     {
-        public Register()
+        private readonly FormManager _formManager;
+        private readonly NetworkManager _networkManager;
+        private readonly Validator _validator;
+
+        public Register(FormManager formManager, NetworkManager networkManager)
         {
             InitializeComponent();
             maskedTextBox2.PasswordChar = '*';
             maskedTextBox3.PasswordChar = '*';
-
-        }
-
-        private void Register_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            FormManager.CloseAllForms();
+            _formManager = formManager;
+            _networkManager = networkManager;
+            _validator = new Validator(_networkManager);
         }
 
         public async void button1_Click(object sender, EventArgs e)
@@ -33,7 +30,7 @@ namespace StudyBuddy
             String email = maskedTextBox4.Text;
             String firstname = maskedTextBox5.Text;
             String lastname = maskedTextBox6.Text;
-            
+
             bool err = false;
 
             if (String.IsNullOrEmpty(username))
@@ -48,7 +45,7 @@ namespace StudyBuddy
                 errorProvider2.SetError(maskedTextBox2, "Please enter your password");
                 err = true;
             }
-            else if (!Validator.CheckPassword(password1))
+            else if (!_validator.CheckPassword(password1))
             {
                 errorProvider2.SetError(maskedTextBox2, "The password must contain at least 8 characters, one uppercase and one lowercase letter and at least one digit");
                 err = true;
@@ -78,7 +75,7 @@ namespace StudyBuddy
             }
             else
             {
-                if (Validator.CheckEmail(email) == true)
+                if (_validator.CheckEmail(email) == true)
                 {
                     errorProvider4.SetError(maskedTextBox4, "Invalid email format");
                     err = true;
@@ -108,12 +105,12 @@ namespace StudyBuddy
                     string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
                     string hashedpassword = BCrypt.Net.BCrypt.HashPassword(password1, salt);
                     User user = new User(username, hashedpassword, salt, firstname, lastname, email);
-                    bool result = await NetworkManager.CreateUserAsync(user);
+                    bool result = await _networkManager.CreateUserAsync(user);
 
                     if (result)
                     {
-                        NetworkManager.SetUserInformation(user.username);
-                        FormManager.Open(this, FormManager.FormType.chatSession);
+                        await _networkManager.SetUserInformationAsync(user.username);
+                        _formManager.Open(this, FormManager.FormType.chatSession);
                     }
                     else
                     {
@@ -121,11 +118,16 @@ namespace StudyBuddy
                         maskedTextBox1.Focus();
                     }
                 }
-                catch(ArgumentException exc)
+                catch (ArgumentException exc)
                 {
                     Console.WriteLine(exc);
                 }
             }
+        }
+
+        private void Register_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _formManager.CloseAllForms();
         }
     }
 }

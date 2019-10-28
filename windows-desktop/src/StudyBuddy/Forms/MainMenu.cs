@@ -7,27 +7,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using StudyBuddy.Managers;
 
-namespace StudyBuddy
+namespace StudyBuddy.Forms
 {
     public partial class MainMenu : Form
     {
-        public MainMenu()
+        private readonly FormManager _formManager;
+        private readonly NetworkManager _networkManager;
+
+        public MainMenu(FormManager formManager, NetworkManager networkManager)
         {
             InitializeComponent();
-            FormManager.AddMain(this);
+            _formManager = formManager;
+            _networkManager = networkManager;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            FormManager.Add(FormManager.FormType.signin);
+            _formManager.Add(FormManager.FormType.signin);
 
             this.Hide();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            FormManager.Add(FormManager.FormType.register);
+            _formManager.Add(FormManager.FormType.register);
 
             this.Hide();
         }

@@ -1,4 +1,4 @@
-﻿namespace StudyBuddy
+﻿namespace StudyBuddy.Forms
 {
     partial class SignIn
     {
@@ -56,7 +56,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.label2.Location = new System.Drawing.Point(84, 114);
+            this.label2.Location = new System.Drawing.Point(87, 129);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 20);
             this.label2.TabIndex = 1;
@@ -74,7 +74,7 @@
             // 
             // maskedTextBox1
             // 
-            this.maskedTextBox1.Location = new System.Drawing.Point(88, 137);
+            this.maskedTextBox1.Location = new System.Drawing.Point(88, 152);
             this.maskedTextBox1.Name = "maskedTextBox1";
             this.maskedTextBox1.Size = new System.Drawing.Size(147, 20);
             this.maskedTextBox1.TabIndex = 3;

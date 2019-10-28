@@ -87,11 +87,26 @@
     <Reference Include="Microsoft.Extensions.Configuration.Binder, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Configuration.Binder.3.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Binder.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.FileExtensions, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.FileExtensions.3.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.FileExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Configuration.Json, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Configuration.Json.3.0.0\lib\netstandard2.0\Microsoft.Extensions.Configuration.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.3.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.3.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Abstractions, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.FileProviders.Abstractions.3.0.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileProviders.Physical, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.FileProviders.Physical.3.0.0\lib\netstandard2.0\Microsoft.Extensions.FileProviders.Physical.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.FileSystemGlobbing, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.FileSystemGlobbing.3.0.0\lib\netstandard2.0\Microsoft.Extensions.FileSystemGlobbing.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Logging.3.0.0\lib\netstandard2.0\Microsoft.Extensions.Logging.dll</HintPath>
@@ -101,6 +116,9 @@
     </Reference>
     <Reference Include="Microsoft.Extensions.Options, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Options.3.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Options.ConfigurationExtensions, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Options.ConfigurationExtensions.3.0.0\lib\netstandard2.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Primitives, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.3.0.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
@@ -166,57 +184,55 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chat.cs">
+    <Compile Include="Forms\Chat.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Chat.Designer.cs">
+    <Compile Include="Forms\Chat.Designer.cs">
       <DependentUpon>Chat.cs</DependentUpon>
     </Compile>
-    <Compile Include="Class1.cs" />
-    <Compile Include="FormManager.cs" />
-    <Compile Include="MainMenu.cs">
+    <Compile Include="Managers\FormManager.cs" />
+    <Compile Include="Forms\MainMenu.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainMenu.Designer.cs">
+    <Compile Include="Forms\MainMenu.Designer.cs">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </Compile>
-    <Compile Include="NetworkManager.cs" />
+    <Compile Include="Managers\NetworkManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rating.xaml.cs">
+    <Compile Include="Forms\Rating.xaml.cs">
       <DependentUpon>Rating.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Register.cs">
+    <Compile Include="Forms\Register.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Register.Designer.cs">
+    <Compile Include="Forms\Register.Designer.cs">
       <DependentUpon>Register.cs</DependentUpon>
     </Compile>
-    <Compile Include="SignIn.cs">
+    <Compile Include="Forms\SignIn.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SignIn.Designer.cs">
+    <Compile Include="Forms\SignIn.Designer.cs">
       <DependentUpon>SignIn.cs</DependentUpon>
     </Compile>
-    <Compile Include="User.cs" />
-    <Compile Include="UserInformation.cs" />
-    <Compile Include="UserList.cs">
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Forms\UserList.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserList.Designer.cs">
+    <Compile Include="Forms\UserList.Designer.cs">
       <DependentUpon>UserList.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserRating.cs">
+    <Compile Include="Forms\UserRating.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserRating.Designer.cs">
+    <Compile Include="Forms\UserRating.Designer.cs">
       <DependentUpon>UserRating.cs</DependentUpon>
     </Compile>
     <Compile Include="Validator.cs" />
-    <EmbeddedResource Include="Chat.resx">
+    <EmbeddedResource Include="Forms\Chat.resx">
       <DependentUpon>Chat.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainMenu.resx">
+    <EmbeddedResource Include="Forms\MainMenu.resx">
       <DependentUpon>MainMenu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -228,16 +244,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Register.resx">
+    <EmbeddedResource Include="Forms\Register.resx">
       <DependentUpon>Register.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SignIn.resx">
+    <EmbeddedResource Include="Forms\SignIn.resx">
       <DependentUpon>SignIn.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserList.resx">
+    <EmbeddedResource Include="Forms\UserList.resx">
       <DependentUpon>UserList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserRating.resx">
+    <EmbeddedResource Include="Forms\UserRating.resx">
       <DependentUpon>UserRating.cs</DependentUpon>
     </EmbeddedResource>
     <None Include=".editorconfig" />
@@ -256,13 +272,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Rating.xaml">
+    <Page Include="Forms\Rating.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
