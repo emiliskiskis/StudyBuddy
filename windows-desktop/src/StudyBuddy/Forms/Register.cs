@@ -75,7 +75,7 @@ namespace StudyBuddy.Forms
             }
             else
             {
-                if (_validator.CheckEmail(email) == true)
+                if (!_validator.CheckEmail(email))
                 {
                     errorProvider4.SetError(maskedTextBox4, "Invalid email format");
                     err = true;

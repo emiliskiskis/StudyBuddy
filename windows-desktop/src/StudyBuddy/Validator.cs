@@ -23,11 +23,11 @@ namespace StudyBuddy
             {
                 MailAddress m = new MailAddress(email);
 
-                return false;
+                return true;
             }
             catch (FormatException)
             {
-                return true;
+                return false;
             }
         }
 
