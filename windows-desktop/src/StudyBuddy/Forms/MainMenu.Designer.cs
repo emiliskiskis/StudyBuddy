@@ -1,4 +1,4 @@
-﻿namespace StudyBuddy
+﻿namespace StudyBuddy.Forms
 {
     partial class MainMenu
     {
