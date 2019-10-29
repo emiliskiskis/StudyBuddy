@@ -103,7 +103,7 @@ namespace StudyBuddy.Managers
         public void OpenChat(Form f1, string groupName)
         {
             Remove(f1);
-            Chat form = new Chat(_networkManager, groupName);
+            Chat form = new Chat(this, _networkManager, groupName);
             list.Add(form);
             form.Show();
         }

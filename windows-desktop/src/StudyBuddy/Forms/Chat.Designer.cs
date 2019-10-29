@@ -69,6 +69,7 @@
             this.Controls.Add(this.button1);
             this.Name = "Chat";
             this.Text = "Chat";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Chat_FormClosed);
             this.Load += new System.EventHandler(this.Chat_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

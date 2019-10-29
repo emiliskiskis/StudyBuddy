@@ -20,7 +20,8 @@ namespace StudyBuddy.Managers
         {
             _client = new HttpClient
             {
-                BaseAddress = new Uri("http://78.56.77.83:8080")
+                BaseAddress = new Uri("http://buddiesofstudy.tk")
+                //"http://78.56.77.83:8080"
             };
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(
@@ -91,14 +92,14 @@ namespace StudyBuddy.Managers
             return _userInformation;
         }
 
-        public void ReceiveMessage(Action<string, string, string> callback)
+        public void ReceiveMessage(Action<string, string, string, DateTime> callback)
         {
-            _connection.On<string, string, string>("ReceiveMessage", callback);
+            _connection.On<string, string, string, DateTime>("ReceiveMessage", callback);
         }
 
         public async void SendMessage(User user, string groupName, string message)
         {
-            await _connection.InvokeAsync<string>("SendMessage", user.username, groupName, message);
+            await _connection.InvokeAsync("SendMessage", user.username, groupName, message);
         }
 
         public async Task SetUserInformationAsync(string username)
@@ -108,8 +109,9 @@ namespace StudyBuddy.Managers
 
         public async Task StartHubAsync()
         {
+            Console.WriteLine(_client.BaseAddress);
             _connection = new HubConnectionBuilder()
-                .WithUrl("http://78.56.77.83:8080" + "/chat")
+                .WithUrl(_client.BaseAddress + "chat")
                 .WithAutomaticReconnect()
                 .Build();
             await _connection.StartAsync();
