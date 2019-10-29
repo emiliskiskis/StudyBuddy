@@ -8,18 +8,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace StudyBuddy
+namespace StudyBuddy.Forms
 {
-    public partial class UserList : Form
+    public partial class UserRating : Form
     {
-        public UserList()
+        public UserRating()
         {
             InitializeComponent();
         }
 
-        private void UserList_FormClosed(object sender, FormClosedEventArgs e)
+        private void UserRating_Load(object sender, EventArgs e)
         {
-            FormManager.Close();
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.Dispose();
         }
     }
 }

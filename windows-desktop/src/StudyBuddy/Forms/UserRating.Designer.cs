@@ -1,4 +1,4 @@
-﻿namespace StudyBuddy
+﻿namespace StudyBuddy.Forms
 {
     partial class UserRating
     {
@@ -32,7 +32,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.rating1 = new StudyBuddy.Rating();
+            this.rating1 = new StudyBuddy.Forms.Rating();
             this.SuspendLayout();
             // 
             // textBox1
