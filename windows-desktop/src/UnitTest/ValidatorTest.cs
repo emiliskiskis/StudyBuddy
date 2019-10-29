@@ -14,14 +14,22 @@ namespace UnitTest
         [Test]
         public void CheckEmail()
         {
-            string email = "titas@gmail.com";         //change for checking
+            string email = "titas";
+            Assert.IsFalse(new Validator().CheckEmail(email));
+            email = "titas@gmail.com";
             Assert.IsTrue(new Validator().CheckEmail(email));
         }
 
         [Test]
         public void CheckPassword()
         {
-            string password = "Titas251";             //change for checking
+            string password = "titas";
+            Assert.IsFalse(new Validator().CheckPassword(password));
+            password = "its251";
+            Assert.IsFalse(new Validator().CheckPassword(password));
+            password = "4566521";
+            Assert.IsFalse(new Validator().CheckPassword(password));
+            password = "Titas251";
             Assert.IsTrue(new Validator().CheckPassword(password));
         }
     } 
