@@ -12,6 +12,11 @@ namespace StudyBuddy
     {
         private readonly NetworkManager _networkManager;
 
+        public Validator()
+        {
+
+        }
+
         public Validator(NetworkManager networkManager)
         {
             _networkManager = networkManager;
