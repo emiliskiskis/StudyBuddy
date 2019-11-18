@@ -13,36 +13,42 @@
   * `/api/users`
   
       User entity model:
-      ```      
+      ```
       {
         "username": Username,
         "password": Password hashed with salt,
         "salt": Salt used with password hashing,
         "firstName": First name,
         "lastName": Last name,
-        "email": Email address,
-        "chats": List of chat ids user is participating in (read-only)
+        "email": Email address
       }
       ```
     * `POST /` - add new user  (returns added user)
-    * `GET /` - get all users (returns their usernames and names)
-    * `GET /{username}` - get user (password and salt will not be provided)
-    * `GET /{username}/salt` - get user salt
-    * `PUT /{username}` - update user (returns updated user without chats)
-    * `PATCH /{username}` - patch user info partially (returns updated user without chats)
-    * `DELETE /{username}` - delete user (returns deleted user without chats)
+    * `GET /` - get all users (returns their usernames and names) (requires general authorization)
+    * `GET /{username}` - get user (password and salt will not be provided) (requires current user authorization)
+    * `PUT /{username}` - update user (returns updated user) (requires current user authorization)
+    * `PATCH /{username}` - patch user info partially (returns updated user) (requires current user authorization)
+    * `DELETE /{username}` - delete user (returns deleted user) (requires current user authorization)
     
     On password change both password and salt fields have to be updated.
-  * `api/login`
+  * `api/auth`
   
-    Login entity model:
+    Login request model:
     ```
     {
       "username": Username of user,
       "password": Password of user hashed with salt
     }
     ```
-    * `POST /` - request to login to server (200 OK if logged in)
+    
+    Salt response model:
+    ```
+    {
+      "salt": Salt used with password hashing
+    }
+    ```
+    * `POST /login` - request to login to server (200 OK if logged in)
+    * `GET /salt/{username}` - get user salt
   * `api/chat`
   
     Group request model:
@@ -56,7 +62,29 @@
     Group response model:
     ```
     {
-      "groupName": Name of group, a GUID string
+      "id": ID of group, a GUID string
     }
+    
+    Chat response model:
     ```
-    * `POST /` - create group and get its name; if group between exactly two users already exists, get its name
+    [
+      {
+        "id": ID of group, a GUID string
+      },
+      ...
+    ]
+    ```
+    
+    Messages response model:
+    ```
+    [
+      {
+        "user": { Public user JSON },
+        "text": Text of message,
+        "sentAt": Datetime of message sent
+      },
+      ...
+    ]
+    * `POST /` - create group and get its id; if group between exactly two users already exists, get its id (requires current user authentication)
+    * `GET /{username}` - get chats of user (requires current user authentication)
+    * `GET /{id}/messages` - get messages of chat by id (requires user to be in chat)
