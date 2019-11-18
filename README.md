@@ -64,6 +64,7 @@
     {
       "id": ID of group, a GUID string
     }
+    ```
     
     Chat response model:
     ```
@@ -85,6 +86,7 @@
       },
       ...
     ]
+    ```
     * `POST /` - create group and get its id; if group between exactly two users already exists, get its id (requires current user authentication)
     * `GET /{username}` - get chats of user (requires current user authentication)
     * `GET /{id}/messages` - get messages of chat by id (requires user to be in chat)
