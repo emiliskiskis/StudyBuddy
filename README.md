@@ -59,18 +59,13 @@
     }
     ```
     
-    Group response model:
-    ```
-    {
-      "id": ID of group, a GUID string
-    }
-    ```
-    
     Chat response model:
     ```
     [
       {
-        "id": ID of group, a GUID string
+        "id": ID of group, a GUID string,
+        "name": Name of chat (optional),
+        "users: [ { Public user JSON }, ... ]
       },
       ...
     ]
@@ -87,6 +82,6 @@
       ...
     ]
     ```
-    * `POST /` - create group and get its id; if group between exactly two users already exists, get its id (requires current user authentication)
+    * `POST /` - create chat (returns created chat); if chat between exactly two users already exists, returns existing chat (requires current user authentication)
     * `GET /{username}` - get chats of user (requires current user authentication)
     * `GET /{id}/messages` - get messages of chat by id (requires user to be in chat)
