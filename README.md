@@ -63,7 +63,8 @@
     ```
     [
       {
-        "id": ID of group, a GUID string,
+        "id": ID of group, a GUID string (readonly),
+        "lastMessage": { Message JSON },
         "name": Name of chat (optional),
         "users: [ { Public user JSON }, ... ]
       },
@@ -75,6 +76,7 @@
     ```
     [
       {
+        "id": Message GUID,
         "user": { Public user JSON },
         "text": Text of message,
         "sentAt": Datetime of message sent
