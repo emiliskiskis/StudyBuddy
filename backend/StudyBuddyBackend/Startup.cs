@@ -29,7 +29,7 @@ namespace StudyBuddyBackend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddNewtonsoftJson();
-            services.AddDbContext<DatabaseContext>(options =>
+            services.AddDbContext<IDatabaseContext, DatabaseContext>(options =>
                 options.UseNpgsql(_connectionString));
 
             services.AddSignalR();
@@ -59,6 +59,7 @@ namespace StudyBuddyBackend
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
+            services.AddSingleton<ActiveUserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

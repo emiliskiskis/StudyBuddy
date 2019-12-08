@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudyBuddyBackend.Database;
@@ -9,9 +10,10 @@ using StudyBuddyBackend.Database;
 namespace StudyBuddyBackend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20191206231638_FeedbackRemoveId")]
+    partial class FeedbackRemoveId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,9 +45,6 @@ namespace StudyBuddyBackend.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("text");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("integer");
-
                     b.HasKey("AuthorUsername", "ReviewerUsername");
 
                     b.HasIndex("ReviewerUsername");
@@ -55,8 +54,8 @@ namespace StudyBuddyBackend.Migrations
 
             modelBuilder.Entity("StudyBuddyBackend.Database.Entities.Message", b =>
                 {
-                    b.Property<string>("Username")
-                        .HasColumnType("character varying");
+                    b.Property<string>("Id")
+                        .HasColumnType("VARCHAR(36)");
 
                     b.Property<string>("ChatId")
                         .HasColumnType("text");
@@ -72,9 +71,14 @@ namespace StudyBuddyBackend.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("text");
 
-                    b.HasKey("Username", "ChatId", "SentAt");
+                    b.Property<string>("Username")
+                        .HasColumnType("character varying");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ChatId");
+
+                    b.HasIndex("Username");
 
                     b.ToTable("Messages");
                 });
@@ -92,16 +96,6 @@ namespace StudyBuddyBackend.Migrations
                     b.ToTable("ProfilePictures");
                 });
 
-            modelBuilder.Entity("StudyBuddyBackend.Database.Entities.Subject", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasColumnType("VARCHAR");
-
-                    b.HasKey("Name");
-
-                    b.ToTable("Subjects");
-                });
-
             modelBuilder.Entity("StudyBuddyBackend.Database.Entities.User", b =>
                 {
                     b.Property<string>("Username")
@@ -109,27 +103,22 @@ namespace StudyBuddyBackend.Migrations
                         .HasMaxLength(255);
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("VARCHAR")
                         .HasMaxLength(255);
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("VARCHAR")
                         .HasMaxLength(255);
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("VARCHAR")
                         .HasMaxLength(255);
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("VARCHAR")
                         .HasMaxLength(255);
 
                     b.Property<string>("Salt")
-                        .IsRequired()
                         .HasColumnType("VARCHAR")
                         .HasMaxLength(255);
 
@@ -153,21 +142,6 @@ namespace StudyBuddyBackend.Migrations
                     b.ToTable("UsersInChats");
                 });
 
-            modelBuilder.Entity("StudyBuddyBackend.Database.Entities.UserSubject", b =>
-                {
-                    b.Property<string>("SubjectName")
-                        .HasColumnType("character varying");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("character varying");
-
-                    b.HasKey("SubjectName", "Username");
-
-                    b.HasIndex("Username");
-
-                    b.ToTable("UserSubjects");
-                });
-
             modelBuilder.Entity("StudyBuddyBackend.Database.Entities.Feedback", b =>
                 {
                     b.HasOne("StudyBuddyBackend.Database.Entities.User", "Author")
@@ -185,17 +159,13 @@ namespace StudyBuddyBackend.Migrations
 
             modelBuilder.Entity("StudyBuddyBackend.Database.Entities.Message", b =>
                 {
-                    b.HasOne("StudyBuddyBackend.Database.Entities.Chat", "Chat")
+                    b.HasOne("StudyBuddyBackend.Database.Entities.Chat", null)
                         .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChatId");
 
                     b.HasOne("StudyBuddyBackend.Database.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("Username")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Username");
                 });
 
             modelBuilder.Entity("StudyBuddyBackend.Database.Entities.ProfilePicture", b =>
@@ -217,21 +187,6 @@ namespace StudyBuddyBackend.Migrations
 
                     b.HasOne("StudyBuddyBackend.Database.Entities.User", "User")
                         .WithMany("Chats")
-                        .HasForeignKey("Username")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("StudyBuddyBackend.Database.Entities.UserSubject", b =>
-                {
-                    b.HasOne("StudyBuddyBackend.Database.Entities.Subject", "Subject")
-                        .WithMany("Users")
-                        .HasForeignKey("SubjectName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StudyBuddyBackend.Database.Entities.User", "User")
-                        .WithMany("Subjects")
                         .HasForeignKey("Username")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

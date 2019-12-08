@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudyBuddyBackend.Database;
@@ -9,9 +10,10 @@ using StudyBuddyBackend.Database;
 namespace StudyBuddyBackend.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20191207140453_Subject")]
+    partial class Subject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,9 +44,6 @@ namespace StudyBuddyBackend.Migrations
 
                     b.Property<string>("Comment")
                         .HasColumnType("text");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("integer");
 
                     b.HasKey("AuthorUsername", "ReviewerUsername");
 
@@ -109,27 +108,22 @@ namespace StudyBuddyBackend.Migrations
                         .HasMaxLength(255);
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("VARCHAR")
                         .HasMaxLength(255);
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("VARCHAR")
                         .HasMaxLength(255);
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("VARCHAR")
                         .HasMaxLength(255);
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("VARCHAR")
                         .HasMaxLength(255);
 
                     b.Property<string>("Salt")
-                        .IsRequired()
                         .HasColumnType("VARCHAR")
                         .HasMaxLength(255);
 
@@ -151,21 +145,6 @@ namespace StudyBuddyBackend.Migrations
                     b.HasIndex("Username");
 
                     b.ToTable("UsersInChats");
-                });
-
-            modelBuilder.Entity("StudyBuddyBackend.Database.Entities.UserSubject", b =>
-                {
-                    b.Property<string>("SubjectName")
-                        .HasColumnType("character varying");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("character varying");
-
-                    b.HasKey("SubjectName", "Username");
-
-                    b.HasIndex("Username");
-
-                    b.ToTable("UserSubjects");
                 });
 
             modelBuilder.Entity("StudyBuddyBackend.Database.Entities.Feedback", b =>
@@ -217,21 +196,6 @@ namespace StudyBuddyBackend.Migrations
 
                     b.HasOne("StudyBuddyBackend.Database.Entities.User", "User")
                         .WithMany("Chats")
-                        .HasForeignKey("Username")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("StudyBuddyBackend.Database.Entities.UserSubject", b =>
-                {
-                    b.HasOne("StudyBuddyBackend.Database.Entities.Subject", "Subject")
-                        .WithMany("Users")
-                        .HasForeignKey("SubjectName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StudyBuddyBackend.Database.Entities.User", "User")
-                        .WithMany("Subjects")
                         .HasForeignKey("Username")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
