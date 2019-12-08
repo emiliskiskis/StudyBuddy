@@ -1,0 +1,6 @@
+[submodule "react"]
+	path = react
+	url = git@github.com:emiliskiskis/StudyBuddyReact.git
+[submodule "backend"]
+	path = backend
+	url = git@github.com:emiliskiskis/StudyBuddyBackend.git
